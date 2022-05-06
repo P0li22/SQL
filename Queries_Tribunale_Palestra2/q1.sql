@@ -47,11 +47,11 @@ HAVING COUNT(DISTINCT CodTribunale) = (SELECT COUNT(DISTINCT CodTribunale)
                                        WHERE C3.CodCausa = U3.CodCausa
                                        AND TipologiaCausa = 'Divorzio'
                                        AND CodTribunale IN (SELECT CodTribunale
-                                                            FROM CAUSA C2, UDIENZA U2
-                                                            WHERE C2.CodCausa = U2.CodCausa
+                                                            FROM CAUSA C4, UDIENZA U4
+                                                            WHERE C4.CodCausa = U4.CodCausa
                                                             AND TipologiaCausa = 'Divorzio'
                                                             GROUP BY CodTribunale
-                                                            HAVING COUNT(DISTINCT C2.CodCausa) >= 50))
+                                                            HAVING COUNT(DISTINCT C4.CodCausa) >= 50))
 
 --ES 2)
 --a) Per ciascuna palestra di Torino presso cui sono state effettuate lezioni di Judo (NomeS = ‘Judo’) da
