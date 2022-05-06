@@ -57,29 +57,29 @@ HAVING COUNT(DISTINCT CodTribunale) = (SELECT COUNT(DISTINCT CodTribunale)
 --a) Per ciascuna palestra di Torino presso cui sono state effettuate lezioni di Judo (NomeS = ‘Judo’) da
 --almeno 5 istruttori diversi, ma non è stata effettuata nessuna lezione di Yoga (NomeS = ‘Yoga’),
 --visualizzare il nome della palestra e il numero di istruttori diversi che hanno effettuato lezioni
---(considerando qualsiasi specialità, non solo ‘Judo’) presso la palestra.
+--(considerando qualsiasi SPECIALITA, non solo ‘Judo’) presso la palestra.
 
 SELECT NomeP, COUNT(DISTINCT CodFiscale)
 FROM PALESTRA P1, LEZIONE L1
-WHERE P1.CodP = L1.CodP  AND P1.Città = 'Torino'
+WHERE P1.CodP = L1.CodP  AND P1.Citta = 'Torino'
 AND P1.CodP NOT IN (SELECT CodP
-                    FROM LEZIONE L2, SPECIALITÀ S1
+                    FROM LEZIONE L2, SPECIALITA S1
                     WHERE L2.CodS = S1.CodS AND NomeS = 'Yoga')
 AND P1.CodP IN (SELECT CodP
-                FROM LEZIONE L3, SPECIALITÀ S2
+                FROM LEZIONE L3, SPECIALITA S2
                 WHERE L3.CodS = S2.CodS AND NomeS = 'Judo'
                 GROUP BY CodP
                 HAVING COUNT(DISTINCT CodFiscale) >= 5)
 GROUP BY P1.CodP, NomeP
 
---b) Per ciascun istruttore che ha solo svolto lezioni di Yoga, visualizzare il nome, l’indirizzo e la città
+--b) Per ciascun istruttore che ha solo svolto lezioni di Yoga, visualizzare il nome, l’indirizzo e la citta
 --della palestra presso cui ha svolto il maggior numero di lezioni
 
-SELECT CodFiscale, NomeP, Indirizzo, Città
+SELECT CodFiscale, NomeP, Indirizzo, Citta
 FROM PALESTRA P1, LEZIONE L1
 WHERE P1.CodP = L1.CodP
 AND CodFiscale NOT IN (SELECT CodFiscale
-                       FROM LEZIONE L2, SPECIALITÀ S1
+                       FROM LEZIONE L2, SPECIALITA S1
                        WHERE L2.CodS = S1.CodS AND NomeS <> 'Yoga')
 GROUP BY CodFiscale, P1.CodP
 HAVING COUNT(*) = (SELECT MAX(NumLezioni)
@@ -87,21 +87,19 @@ HAVING COUNT(*) = (SELECT MAX(NumLezioni)
                          FROM PALESTRA P2, LEZIONE L3
                          WHERE P2.CodP = L3.CodP
                          AND CodFiscale NOT IN (SELECT CodFiscale
-                                                FROM LEZIONE L4, SPECIALITÀ S2
+                                                FROM LEZIONE L4, SPECIALITA S2
                                                 WHERE L4.CodS = S2.CodS AND NomeS <> 'Yoga')
                          GROUP BY CodFiscale, P2.CodP) AS LxP
                    WHERE L1.CodFiscale = LxP.CodFiscale)
 
---c) Per ogni istruttore che ha allenato presso tutte le palestre della sua città di residenza, visualizzare
---nome, cognome e il numero di specialità per le quali ha svolto lezioni.
+--c) Per ogni istruttore che ha allenato presso tutte le palestre della sua Citta di residenza, visualizzare
+--nome, cognome e il numero di SPECIALITA per le quali ha svolto lezioni.
 
-SELECT NomeT, Cognome, COUNT(DISTINCT CodS)
-FROM ISTRUTTORE I1, LEZIONE L1
-WHERE I1.CodFiscale = L1.CodFiscale
-AND CodP IN (SELECT CodP
-             FROM PALESTRA P1
-             WHERE P1.Città = I1.Città)
-GROUP BY I1.CodFiscale, NomeT, Cognome
-HAVING COUNT(DISTINCT CodP) = (SELECT COUNT(*)
-                               FROM PALESTRA P2
-                               WHERE P2.Città = I1.Città))
+  SELECT NomeT, Cognome, COUNT(DISTINCT CodS)
+  FROM ISTRUTTORE I1, LEZIONE L1, PALESTRA P1
+  WHERE I1.CodFiscale = L1.CodFiscale AND P1.CodP = L1.CodP
+  AND I1.Citta = P1.Citta
+  GROUP BY I1.CodFiscale, NomeT, Cognome, I1.Citta
+  HAVING COUNT(DISTINCT P1.CodP) = (SELECT COUNT(DISTINCT CodP)
+                                    FROM PALESTRA P2
+                                    WHERE P2.Citta = I1.Citta)
