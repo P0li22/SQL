@@ -51,7 +51,7 @@ HAVING COUNT(DISTINCT CodTribunale) = (SELECT COUNT(DISTINCT CodTribunale)
                                                             WHERE C4.CodCausa = U4.CodCausa
                                                             AND TipologiaCausa = 'Divorzio'
                                                             GROUP BY CodTribunale
-                                                            HAVING COUNT(DISTINCT C4.CodCausa) >= 50))
+                                                            HAVING COUNT(DISTINCT C4.CodCausa) >= 50));
 
 --ES 2)
 --a) Per ciascuna palestra di Torino presso cui sono state effettuate lezioni di Judo (NomeS = ‘Judo’) da
@@ -70,7 +70,7 @@ AND P1.CodP IN (SELECT CodP
                 WHERE L3.CodS = S2.CodS AND NomeS = 'Judo'
                 GROUP BY CodP
                 HAVING COUNT(DISTINCT CodFiscale) >= 5)
-GROUP BY P1.CodP, NomeP
+GROUP BY P1.CodP, NomeP;
 
 --b) Per ciascun istruttore che ha solo svolto lezioni di Yoga, visualizzare il nome, l’indirizzo e la citta
 --della palestra presso cui ha svolto il maggior numero di lezioni
@@ -90,7 +90,7 @@ HAVING COUNT(*) = (SELECT MAX(NumLezioni)
                                                 FROM LEZIONE L4, SPECIALITA S2
                                                 WHERE L4.CodS = S2.CodS AND NomeS <> 'Yoga')
                          GROUP BY CodFiscale, P2.CodP) AS LxP
-                   WHERE L1.CodFiscale = LxP.CodFiscale)
+                   WHERE L1.CodFiscale = LxP.CodFiscale);
 
 --c) Per ogni istruttore che ha allenato presso tutte le palestre della sua Citta di residenza, visualizzare
 --nome, cognome e il numero di SPECIALITA per le quali ha svolto lezioni.
@@ -102,4 +102,4 @@ HAVING COUNT(*) = (SELECT MAX(NumLezioni)
   GROUP BY I1.CodFiscale, NomeT, Cognome, I1.Citta
   HAVING COUNT(DISTINCT P1.CodP) = (SELECT COUNT(DISTINCT CodP)
                                     FROM PALESTRA P2
-                                    WHERE P2.Citta = I1.Citta)
+                                    WHERE P2.Citta = I1.Citta);
