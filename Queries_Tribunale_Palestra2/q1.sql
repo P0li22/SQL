@@ -97,7 +97,7 @@ HAVING COUNT(*) = (SELECT MAX(NumLezioni)
                                                 FROM LEZIONE L4, SPECIALITA S2
                                                 WHERE L4.CodS = S2.CodS AND NomeS <> 'Yoga')
                          GROUP BY CodFiscale, P2.CodP) AS LxP
-                   GROUP BY LxP.Codfiscale
+                   GROUP BY LxP.CodFiscale
                    HAVING L1.CodFiscale = LxP.CodFiscale)
 
 /*
