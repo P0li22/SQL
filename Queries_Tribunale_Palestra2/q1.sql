@@ -97,8 +97,7 @@ HAVING COUNT(*) = (SELECT MAX(NumLezioni)
                                                 FROM LEZIONE L4, SPECIALITA S2
                                                 WHERE L4.CodS = S2.CodS AND NomeS <> 'Yoga')
                          GROUP BY CodFiscale, P2.CodP) AS LxP
-                   GROUP BY LxP.CodFiscale
-                   HAVING L1.CodFiscale = LxP.CodFiscale)
+                   WHERE L1.CodFiscale = LxP.CodFiscale)
 
 /*
 c) Per ogni istruttore che ha allenato presso tutte le palestre della sua Citta di residenza, visualizzare
