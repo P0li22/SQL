@@ -12,7 +12,7 @@ BEGIN
     VALUES(:NEW.JOB, 1);
   ELSE
     UPDATE SUMMARY
-    SET NUM = NUM + 1;
+    SET NUM = NUM + 1
     WHERE JOB = :NEW.JOB;
   END IF;
 END;
@@ -33,7 +33,7 @@ BEGIN
     VALUES(:NEW.JOB, 1);
   ELSE
     UPDATE SUMMARY
-    SET NUM = NUM + 1;
+    SET NUM = NUM + 1
     WHERE JOB = :NEW.JOB;
   END IF;
 
