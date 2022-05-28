@@ -33,13 +33,17 @@ DECLARE
 pos NUMBER;
 t NUMBER;
 BEGIN
+
+-- calcolo posizione in classifica atleta
   SELECT COUNT(*) + 1 INTO pos
   FROM CLASSIFICA
   WHERE Tempo < :NEW.Tempo;
 
+-- inserimento in CLASSIFICA
   INSERT INTO CLASSIFICA
   VALUES(pos, :NEW.CodAtleta, :NEW.Tempo)
 
+-- aggiornamento posizione atleti arrivati dopo l'atleta appena inserito
   UPDATE CLASSIFICA
   SET Posizione = Posizione + 1
   WHERE Tempo > :NEW.Tempo
