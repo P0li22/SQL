@@ -54,3 +54,18 @@ WHERE S1.CodS = P1.CodS AND P1.Data = (SELECT MAX(P2.Data)
                                        FROM PRENOTAZIONE_SALA P2
                                        WHERE P2.CodS = P1.CodS)
 GROUP BY S1.CodS, S1.NumeroMaxPosti
+
+/* Visualizzare il codice e il numero massimo di posti delle sale
+dotate di proiettore che sono state prenotate almeno 15 volte per
+riunioni che iniziano prima delle ore 15:00, ma non sono mai
+state prenotate per riunioni che cominciano dopo le ore 20:00 */
+
+SELECT S1.CodS, S1.NumeroMaxPosti
+FROM SALA S1, PRENOTAZIONE_SALA P1
+WHERE S1.CodS = P1.CodS AND S1.Proiettore = "sì"
+AND S1.CodS NOT IN(SELECT P2.CodS
+                   FROM PRENOTAZIONE_SALA P2
+                   WHERE P2.OraInizio > "20:00")
+AND P1.OraInizio < "15:00"
+GROUP BY S1.CodS, S1.NumeroMaxPosti
+HAVING COUNT(*) >= 15
